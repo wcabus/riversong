@@ -25,7 +25,7 @@ public class CustomersController : ControllerBase
     [HttpGet]
     [Consumes(ContentTypes.Customers.Page, ContentTypes.Json)]
     [Produces(ContentTypes.Customers.Page, ContentTypes.Json, Type = typeof(Page<Customer>))]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Page<Customer>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCustomers([FromQuery] CustomersQueryParameters parameters)
     {
         var response = await _mediator.Send(_mapper.Map<GetCustomersQuery>(parameters));
@@ -36,7 +36,7 @@ public class CustomersController : ControllerBase
     [HttpGet("{id:guid}", Name = nameof(GetCustomerById))]
     [Consumes(ContentTypes.Customers.Single, ContentTypes.Json)]
     [Produces(ContentTypes.Customers.Single, ContentTypes.Json, Type = typeof(Customer))]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetCustomerById(Guid id)
     {
@@ -52,7 +52,7 @@ public class CustomersController : ControllerBase
     [HttpPost]
     [Consumes(typeof(CreateCustomer), ContentTypes.Customers.Create, ContentTypes.Json)]
     [Produces(ContentTypes.Customers.Single, ContentTypes.Json, Type = typeof(Customer))]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(Customer), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(IReadOnlyCollection<string>), StatusCodes.Status422UnprocessableEntity, ContentTypes.Errors, ContentTypes.Json)]
     public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomer? model)
