@@ -18,7 +18,6 @@
     <ProjectReference Include="..\..\shared\RiverSong.Shared.Application\RiverSong.Shared.Application.csproj" />
     <ProjectReference Include="..\..\shared\RiverSong.Shared.Persistence\RiverSong.Shared.Persistence.csproj" />
     <ProjectReference Include="..\RiverSong.Customers.Application\RiverSong.Customers.Application.csproj" />
-    <ProjectReference Include="..\RiverSong.Customers.Domain\RiverSong.Customers.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

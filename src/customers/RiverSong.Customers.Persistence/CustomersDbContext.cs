@@ -5,7 +5,7 @@ using RiverSong.Shared.Domain.Common;
 
 namespace RiverSong.Customers.Persistence;
 
-public sealed class CustomersDbContext : DbContext
+public sealed class CustomersDbContext : DbContext, IUnitOfWork
 {
     private readonly IUserAccessor _userAccessor;
 
@@ -32,29 +32,24 @@ public sealed class CustomersDbContext : DbContext
 
     private async Task AuditChangedEntities()
     {
-        ChangeTracker.DetectChanges();
-        foreach (var entry in ChangeTracker.Entries())
+        foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
         {
             if (entry.State is EntityState.Detached or EntityState.Unchanged)
             {
                 continue;
             }
 
-            if (entry.Entity is not AuditableEntityBase auditEntity)
-            {
-                continue;
-            }
-
             var changer = await _userAccessor.GetCurrentUserName();
-            if (entry.State == EntityState.Added)
+            switch (entry.State)
             {
-                auditEntity.CreatedAt = DateTimeOffset.UtcNow;
-                auditEntity.CreatedBy = changer;
-            }
-            else
-            {
-                auditEntity.UpdatedAt = DateTimeOffset.UtcNow;
-                auditEntity.UpdatedBy = changer;
+                case EntityState.Added:
+                    entry.Entity.CreatedAt = DateTimeOffset.UtcNow;
+                    entry.Entity.CreatedBy = changer;
+                    break;
+                case EntityState.Modified:
+                    entry.Entity.UpdatedAt = DateTimeOffset.UtcNow;
+                    entry.Entity.UpdatedBy = changer;
+                    break;
             }
         }
     }

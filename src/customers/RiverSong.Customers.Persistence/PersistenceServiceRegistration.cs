@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RiverSong.Customers.Application.Contracts;
 using RiverSong.Customers.Persistence.Repositories;
+using RiverSong.Shared.Application.Contracts;
 
 namespace RiverSong.Customers.Persistence;
 
@@ -14,6 +15,7 @@ public static class PersistenceServiceRegistration
             x.UseSqlServer(connectionString, sql => sql.EnableRetryOnFailure());
         });
 
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<CustomersDbContext>());
         services.AddScoped<ICustomerRepository, CustomerRepository>();
 
         return services;

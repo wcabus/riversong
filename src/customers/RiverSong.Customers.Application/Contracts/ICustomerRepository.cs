@@ -5,5 +5,5 @@ namespace RiverSong.Customers.Application.Contracts;
 
 public interface ICustomerRepository : IAsyncRepository<Customer>
 {
-    
+    Task<bool> IsEmailAddressAlreadyInUseAsync(string emailAddress);
 }

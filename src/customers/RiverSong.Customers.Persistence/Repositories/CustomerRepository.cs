@@ -1,4 +1,5 @@
-﻿using RiverSong.Customers.Application.Contracts;
+﻿using Microsoft.EntityFrameworkCore;
+using RiverSong.Customers.Application.Contracts;
 using RiverSong.Customers.Domain.Entities;
 using RiverSong.Shared.Persistence.Repositories;
 
@@ -8,5 +9,11 @@ public class CustomerRepository : RepositoryBase<Customer, CustomersDbContext>, 
 {
     public CustomerRepository(CustomersDbContext dbContext) : base(dbContext)
     {
+    }
+
+    public async Task<bool> IsEmailAddressAlreadyInUseAsync(string emailAddress)
+    {
+        return await DbContext.Set<Customer>()
+            .AnyAsync(x => x.Email == emailAddress);
     }
 }
